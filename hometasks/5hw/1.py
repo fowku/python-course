@@ -6,29 +6,28 @@ def reverse_dict(file_name):
     lines = file.readlines()
     file.close()
 
-    original = defaultdict(list, **{})
+    original = defaultdict(list)
 
     # split into common dictionary
     for line in lines:
-        words = line.strip().split(' - ')
-        for word in words[1].split(', '):
-            original[words[0]].append(word)
+        word, translations = line.strip().split(' - ')
+        original[word].extend(translations.split(', '))
 
-    reversed = defaultdict(list, **{})
+    reversed_dict = defaultdict(list)
 
     # reverse dictionary
     for key, values in original.items():
         for elem in values:
-            reversed[elem].append(key)
+            reversed_dict[elem].append(key)
 
     # sort values
-    for key in reversed:
-        reversed[key].sort()
+    for key in reversed_dict:
+        reversed_dict[key].sort()
 
     output = open('output.txt', 'w')
 
     # write to new file
-    for word in sorted(reversed):
-        output.write(word + ' - ' + ', '.join(reversed[word]) + '\n')
+    for word in sorted(reversed_dict):
+        output.write(word + ' - ' + ', '.join(reversed_dict[word]) + '\n')
 
     output.close()
